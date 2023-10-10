@@ -46,7 +46,7 @@ sidebarLayout(
             tabPanel("Tx Sequence",fluidRow(column(12,
                                                         uiOutput("h2"),
                                                         br(),
-                                                        withSpinner(plotOutput("p2",width = "100%"))
+                                                        withSpinner(uiOutput("o2"))
                                                         ,align = "center"
             )))
         )),

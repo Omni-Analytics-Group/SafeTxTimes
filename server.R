@@ -70,7 +70,7 @@ function(input, output, session) {
 										txdata$data <- txdf
 										# saveRDS(txdf,"~/Desktop/SafeTxTimes/data.RDS")
 									}
-									# if(nchar(input$walladd)==41) txdata$data <- readRDS("~/Desktop/SafeTxTimes/data.RDS")
+									if(nchar(input$walladd)==41) txdata$data <- readRDS("~/Desktop/SafeTxTimes/data.RDS")
 	})
 	########################################################################
 	########################################################################
@@ -148,20 +148,26 @@ function(input, output, session) {
 								dark_pal <- brewer.pal(length(levels(xdata$Value)), "Dark2")
 								p2 <- 	ggplot(xdata, aes(y = `Transaction ID Num`, x = Address)) +
 										geom_segment(data = tdata,aes(y = `Transaction ID Num`, yend = `Transaction ID Num`,x = FirstAddress, xend = LastAddress)) +
-										geom_tile(size = .5, fill = "white", aes(colour = Value)) +
+										geom_tile(linewidth = .5, fill = "white", aes(colour = Value, height = .8, width = .8)) +
 										geom_text(aes(label = Value, size = Value, colour = Value),size=8) +
-										scale_x_discrete(label = function(x) stringr::str_trunc(x, 16, side = "center")) +
+										scale_x_discrete(label = function(x) stringr::str_trunc(x, 16, side = "center"),position = "top") +
 										scale_y_continuous("Transaction ID", expand = c(0, 0), breaks = tdata$`Transaction ID Num`, labels = tdata$`Transaction ID`,limits=c(0,max(tdata$`Transaction ID Num`)+1), sec.axis = sec_axis(~ ., name = "Execution Time", breaks = tdata$`Transaction ID Num`, labels = txtimes)) +
 										scale_colour_manual(values = dark_pal) +
 										coord_equal() +
 										theme(
 												legend.position = "off",
+												axis.title.x = element_blank(),
+												axis.title.y = element_text(size=15),
 												axis.text.x = element_text(size=10,angle = 90, hjust = 1),
 												axis.text.y = element_text(size=10),
 												plot.margin = margin(t = 0, r = 0, b = 0, l = 0, unit = "pt")
 										)
 								return(p2)
-							},height = 4000,width=600)
+							})
+	output$o2 <- renderUI({
+								if(is.null(txdata$data)) return(NULL)
+								plotOutput("p2",height = paste0(nrow(txdata$data)*30,"px"))
+					})
 	########################################################################
 	########################################################################
 }
