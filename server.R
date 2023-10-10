@@ -32,6 +32,11 @@ function(input, output, session) {
 
 	## Get Tx Data
 	observeEvent(input$wallproc,{
+									if(nchar(input$walladd)!=42 | !grepl("^0x",input$walladd))
+									{
+										sendSweetAlert(session = session,title = "Address!!",text = "Address Not Valid",type = "error")
+										return(NULL)
+									}
 									if(nchar(input$walladd)==42)
 									{
 										## All Txs
@@ -39,12 +44,27 @@ function(input, output, session) {
 										offset <- 0
 										finished <- FALSE
 										progress <- Progress$new()
-										progress$set(message = "Fetching Transaction Details", value = 0)
+										progress$set(message = "Fetching Account Details", value = 0)
 										while(!finished)
 										{
 											## Tx URL
-											tx_url <- paste0("https://safe-transaction-mainnet.safe.global/api/v1/safes/",input$walladd,"/all-transactions/?executed=true&limit=10&offset=",offset,"&queued=false&trusted=false")
+											tx_url <- paste0("https://safe-transaction-",input$walltype,".safe.global/api/v1/safes/",input$walladd,"/all-transactions/?executed=true&limit=10&offset=",offset,"&queued=false&trusted=false")
 											tx_t <- content(GET(tx_url))
+											if(("count" %in% names(tx_t)))
+											{
+												if(tx_t$count==0)
+												{
+													sendSweetAlert(session = session,title = "Address!!",text = "No Transactions for Address",type = "error")
+													progress$close()
+													return(NULL)
+												}
+											}
+											if(("message" %in% names(tx_t)))
+											{
+												sendSweetAlert(session = session,title = "Address!!",text = tx_t$message,type = "error")
+												progress$close()
+												return(NULL)
+											}
 											tx_all <- c(tx_all,tx_t[[4]])
 											if(is.null(tx_t$`next`)) finished <- TRUE
 											offset <- offset+10
@@ -70,7 +90,7 @@ function(input, output, session) {
 										txdata$data <- txdf
 										# saveRDS(txdf,"~/Desktop/SafeTxTimes/data.RDS")
 									}
-									if(nchar(input$walladd)==41) txdata$data <- readRDS("~/Desktop/SafeTxTimes/data.RDS")
+									# if(nchar(input$walladd)==41) txdata$data <- readRDS("~/Desktop/SafeTxTimes/data.RDS")
 	})
 	########################################################################
 	########################################################################
@@ -166,7 +186,7 @@ function(input, output, session) {
 							})
 	output$o2 <- renderUI({
 								if(is.null(txdata$data)) return(NULL)
-								plotOutput("p2",height = paste0(nrow(txdata$data)*30,"px"))
+								plotOutput("p2",height = paste0(max(800,nrow(txdata$data)*30),"px"))
 					})
 	########################################################################
 	########################################################################

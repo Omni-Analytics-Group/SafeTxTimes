@@ -5,6 +5,7 @@ library(shinyWidgets)
 library(bslib)
 library(ggplot2)
 library(shinycssloaders)
+useSweetAlert()
 
 fluidPage(theme = bs_theme(bootswatch = "sandstone"),
 
@@ -31,7 +32,18 @@ sidebarLayout(
             hr(),
 
             ## Wallet Address
-            textInput("walladd", label = NULL, value = "0x89C51828427F70D77875C6747759fB17Ba10Ceb0", placeholder = "Wallet Address ...."),
+            selectizeInput("walltype", label = h6("Chain"),choices = list(
+                                                                                "Ethereum Mainnet" = "mainnet",
+                                                                                "Optimism" = "optimism",
+                                                                                "Arbitrum" = "arbitrum",
+                                                                                "Avalanche" = "avalanche",
+                                                                                "BNB Smart Chain" = "bsc",
+                                                                                "Celo" = "celo",
+                                                                                "Gnosis Chain" = "gnosis-chain",
+                                                                                "Goerli" = "goerli",
+                                                                                "Polygon" = "polygon"
+                                                                        ), selected = 1,multiple = FALSE),
+            textInput("walladd", label = h6("Wallet Address"), value = "0x89C51828427F70D77875C6747759fB17Ba10Ceb0", placeholder = "Wallet Address ...."),
             fluidRow(column(12,actionBttn("wallproc", label = "Process",width=200,color="success",style="simple"),align = "center"))
         ),
         ########################################################################
