@@ -143,14 +143,15 @@ function(input, output, session) {
 														FirstAddress = levels(Address)[min(as.numeric(Address))],
 														LastAddress = levels(Address)[max(as.numeric(Address))],
 											)
+
 								txtimes <- ifelse(is.na(str_extract(duration(tdata$RawDuration),"(?<=\\().+?(?=\\))")),paste0(sapply(ceiling(tdata$RawDuration),function(x) max(x,0))," Seconds"),str_extract(duration(tdata$RawDuration),"(?<=\\().+?(?=\\))"))
 								dark_pal <- brewer.pal(length(levels(xdata$Value)), "Dark2")
 								p2 <- 	ggplot(xdata, aes(y = `Transaction ID Num`, x = Address)) +
 										geom_segment(data = tdata,aes(y = `Transaction ID Num`, yend = `Transaction ID Num`,x = FirstAddress, xend = LastAddress)) +
-										geom_tile(size = .5, fill = "white", aes(colour = Value, height = .8, width = .8)) +
+										geom_tile(size = .5, fill = "white", aes(colour = Value)) +
 										geom_text(aes(label = Value, size = Value, colour = Value),size=8) +
 										scale_x_discrete(label = function(x) stringr::str_trunc(x, 16, side = "center")) +
-										scale_y_continuous("Transaction ID", breaks = tdata$`Transaction ID Num`, labels = tdata$`Transaction ID`,limits=c(0,max(tdata$`Transaction ID Num`)+1), sec.axis = sec_axis(~ ., name = "Execution Time", breaks = tdata$`Transaction ID Num`, labels = txtimes)) +
+										scale_y_continuous("Transaction ID", expand = c(0, 0), breaks = tdata$`Transaction ID Num`, labels = tdata$`Transaction ID`,limits=c(0,max(tdata$`Transaction ID Num`)+1), sec.axis = sec_axis(~ ., name = "Execution Time", breaks = tdata$`Transaction ID Num`, labels = txtimes)) +
 										scale_colour_manual(values = dark_pal) +
 										coord_equal() +
 										theme(
@@ -162,5 +163,5 @@ function(input, output, session) {
 								return(p2)
 							},height = 4000,width=600)
 	########################################################################
-	########################################################################	
+	########################################################################
 }

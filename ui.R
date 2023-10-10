@@ -17,14 +17,14 @@ sidebarLayout(
         ## Side Panel
         ########################################################################
         sidebarPanel(width=3,
-            
+
             ## Logo
             tags$div(style = "text-align: center;", tags$img(src = "safe.png", height=80)),
             hr(),
 
             ## Label
-            h3("SafeTxTime Visauliser",align="center"),
-            
+            h3("SafeTxTime Visualiser",align="center"),
+
             ## Description
             fluidRow(column(12,h6("Dive deep into transaction dynamics."),align = "center")),
             helpText("Measure responsiveness of team confirmations and visualize confirmation delays. Enhance your operational efficiency with data-driven insights."),
@@ -50,7 +50,7 @@ sidebarLayout(
                                                         ,align = "center"
             )))
         )),
-        
+
         ########################################################################
         ########################################################################
     )
