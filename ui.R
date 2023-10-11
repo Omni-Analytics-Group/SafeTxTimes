@@ -1,16 +1,18 @@
 ## Loading Libraries
 library(shiny)
 library(shinydashboard)
+library(shinycssloaders)
 library(shinyWidgets)
 library(bslib)
 library(ggplot2)
-library(shinycssloaders)
+library(DT)
 useSweetAlert()
 
 fluidPage(theme = bs_theme(bootswatch = "sandstone"),
 
     ## Custom CSS
-    tags$style("#walladd {font-size:12px;height:50px;}"),
+    tags$style("#walladd {font-size:14px;height:50px;}"),
+    tags$style(type='text/css', ".selectize-input { font-size: 14px;} .selectize-dropdown { font-size: 14px; }"),
 
 sidebarLayout(
 
@@ -32,7 +34,7 @@ sidebarLayout(
             hr(),
 
             ## Wallet Address
-            selectizeInput("walltype", label = h6("Chain"),choices = list(
+            selectizeInput("walltype", label = h6("Select Chain"),choices = list(
                                                                                 "Ethereum Mainnet" = "mainnet",
                                                                                 "Optimism" = "optimism",
                                                                                 "Arbitrum" = "arbitrum",
@@ -43,7 +45,7 @@ sidebarLayout(
                                                                                 "Goerli" = "goerli",
                                                                                 "Polygon" = "polygon"
                                                                         ), selected = 1,multiple = FALSE),
-            textInput("walladd", label = h6("Wallet Address"), value = "0x89C51828427F70D77875C6747759fB17Ba10Ceb0", placeholder = "Wallet Address ...."),
+            textInput("walladd", label = h6("Enter Wallet Address"), value = "0x89C51828427F70D77875C6747759fB17Ba10Ceb0", placeholder = "Wallet Address ...."),
             fluidRow(column(12,actionBttn("wallproc", label = "Process",width=200,color="success",style="simple"),align = "center"))
         ),
         ########################################################################
@@ -54,7 +56,10 @@ sidebarLayout(
         ## Main Panel
         ########################################################################
         mainPanel(width=9,tabsetPanel(id = "tabs1",
-            tabPanel("Tx Times",withSpinner(plotOutput("p1"))),
+            tabPanel("Tx Times",
+                withSpinner(plotOutput("p1")),
+                withSpinner(dataTableOutput("d1"))
+            ),
             tabPanel("Tx Sequence",fluidRow(column(12,
                                                         uiOutput("h2"),
                                                         br(),

@@ -9,6 +9,7 @@ library(stringr)
 library(dplyr)
 library(tidyr)
 library(RColorBrewer)
+library(DT)
 
 ########################################################################
 ## Helper Functions
@@ -32,6 +33,10 @@ function(input, output, session) {
 
 	## Get Tx Data
 	observeEvent(input$wallproc,{
+									## If Debug
+									# txdata$data <- readRDS("~/Desktop/SafeTxTimes/data.RDS");return(NULL)
+
+									## Get Tx Data
 									if(nchar(input$walladd)!=42 | !grepl("^0x",input$walladd))
 									{
 										sendSweetAlert(session = session,title = "Address!!",text = "Address Not Valid",type = "error")
@@ -90,15 +95,15 @@ function(input, output, session) {
 										txdata$data <- txdf
 										# saveRDS(txdf,"~/Desktop/SafeTxTimes/data.RDS")
 									}
-									# if(nchar(input$walladd)==41) txdata$data <- readRDS("~/Desktop/SafeTxTimes/data.RDS")
 	})
 	########################################################################
 	########################################################################
 
 	########################################################################
-	## Visualisations
+	## Visualisations Tx Times
 	########################################################################
 	output$p1 <- renderPlot({
+								## Null if no data
 								if(is.null(txdata$data)) return(NULL)
 
 								## Prepare Data
@@ -123,11 +128,58 @@ function(input, output, session) {
 								)
 								return(p1)
 							})
+
+	output$d1 <- renderDataTable({
+									## Null if no data
+									if(is.null(txdata$data)) return(NULL)
+
+									## Prepare Data
+									data <- txdata$data
+									allwalls <- unique(unlist(data$SignedBy))
+									vdata <- as.data.frame((mapply(function(x,y,z,allwalls) difftime(y[match(allwalls,x)],z,units="secs"),data$SignedBy,data$SignedAt,data$submissionDate,MoreArgs=list(allwalls=allwalls))))
+									rownames(vdata) <- allwalls
+									colnames(vdata) <- data$nonce
+									walldf <- data.frame(
+															Address = allwalls,
+															`Num Txs Signed` = apply(vdata,1,function(x) sum(!is.na(x))),
+															`Mean Tx Sign Time` = apply(vdata,1,function(x) mean(x,na.rm=TRUE)),
+															`Median Tx Sign Time` = apply(vdata,1,function(x) median(x,na.rm=TRUE)),
+															check.names = FALSE 
+												)
+									walldf <- walldf[order(walldf$`Mean Tx Sign Time`),]
+									walldf$`Mean Tx Sign Time` <- ifelse(is.na(str_extract(duration(walldf$`Mean Tx Sign Time`),"(?<=\\().+?(?=\\))")),paste0(sapply(ceiling(walldf$`Mean Tx Sign Time`),function(x) max(x,0))," Seconds"),str_extract(duration(walldf$`Mean Tx Sign Time`),"(?<=\\().+?(?=\\))"))
+									walldf$`Median Tx Sign Time` <- ifelse(is.na(str_extract(duration(walldf$`Median Tx Sign Time`),"(?<=\\().+?(?=\\))")),paste0(sapply(ceiling(walldf$`Median Tx Sign Time`),function(x) max(x,0))," Seconds"),str_extract(duration(walldf$`Median Tx Sign Time`),"(?<=\\().+?(?=\\))"))
+
+									## Data Table
+									datatable(
+												walldf,
+												options = list(
+															scrollX = TRUE,
+															paging = FALSE,
+															bInfo = FALSE,
+															ordering=FALSE,
+															searching=FALSE,
+															columnDefs = list(list(className = 'dt-center', targets = 1:3)),
+															initComplete = JS("function(settings, json) {","$(this.api().table().header()).css({'font-size':'16px','background-color': '#000', 'color': '#fff'});","}")
+														),
+												rownames= FALSE
+									) %>%
+									DT::formatStyle(columns = c(1, 2, 3, 4), fontSize = '80%')
+				})
+	########################################################################
+	########################################################################
+
+
+	########################################################################
+	## Visualisations Tx Sequences
+	########################################################################
 	output$h2 <- renderUI({
+								## Null if no data
 								if(is.null(txdata$data)) return(NULL)
 								h4("Gnosis Safe Multi-Signature Sequence Plot")
 					})
 	output$p2 <- renderPlot({
+								## Null if no data
 								if(is.null(txdata$data)) return(NULL)
 
 								## Prepare Data
@@ -185,6 +237,7 @@ function(input, output, session) {
 								return(p2)
 							})
 	output$o2 <- renderUI({
+								## Null if no data
 								if(is.null(txdata$data)) return(NULL)
 								plotOutput("p2",height = paste0(max(800,nrow(txdata$data)*30),"px"))
 					})
