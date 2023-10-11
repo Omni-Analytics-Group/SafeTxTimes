@@ -1,9 +1,9 @@
 # SafeTxTimes
 Safe Transaction Time Visualiser
 
-## [App Walkthrough on YouTube](https://www.youtube.com/watch?v=8d8SEtv1MDk) <<< Click Here
+## [App Walkthrough on YouTube](https://www.youtube.com/watch?v=8d8) <<< Click Here
 
-## [App deployed on a tiny droplet](http://143.110.238.86:5692) <<< Click Here
+## [App deployed on a droplet](http://143.110.238.86:) <<< Click Here
 
 <hr>
 
