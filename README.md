@@ -38,7 +38,7 @@ runApp()
 
 <img src="www/First.png" align="center"/>
 <div align="center">Dashboard</div>
-
+<br>
 
 #### 4. Select Chain and Enter Address and click Process
 
@@ -49,22 +49,26 @@ runApp()
 
 <img src="www/SelectChain.png" align="center"/>
 <div align="center">Select Chain</div>
+<br>
 
 
 <img src="www/EnterAddress.png" align="center"/>
 <div align="center">Enter Address</div>
-
+<br>
 
 #### 4. Results
 
 
 <img src="www/Loading.png" align="center"/>
 <div align="center">Pulling Data</div>
+<br>
 
 <img src="www/Tab1.png" align="center"/>
 <div align="center">Tx Times</div>
+<br>
 
 <img src="www/Tab2.png" align="center"/>
 <div align="center">Tx Sequence</div>
+<br>
 
 <hr>
