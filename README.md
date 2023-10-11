@@ -47,20 +47,24 @@ library(shiny)
 runApp()
 ```
 
-<img src="www/SelectChain.png" align="left"/>
-<div align="left">Select Chain</div>
-<img src="www/EnterAddress.png" align="right"/>
-<div align="right">Enter Address</div>
+<img src="www/SelectChain.png" align="center"/>
+<div align="center">Select Chain</div>
+
+
+<img src="www/EnterAddress.png" align="center"/>
+<div align="center">Enter Address</div>
 
 
 #### 4. Results
 
 
-<img src="www/Loading.png" align="left"/>
-<div align="left">Pulling Data</div>
+<img src="www/Loading.png" align="center"/>
+<div align="center">Pulling Data</div>
+
 <img src="www/Tab1.png" align="center"/>
 <div align="center">Tx Times</div>
-<img src="www/Tab2.png" align="right"/>
-<div align="right">Tx Sequence</div>
+
+<img src="www/Tab2.png" align="center"/>
+<div align="center">Tx Sequence</div>
 
 <hr>
