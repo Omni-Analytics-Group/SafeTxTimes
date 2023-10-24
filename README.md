@@ -3,8 +3,6 @@ Safe Transaction Time Visualiser
 
 ## [App Walkthrough on YouTube](https://www.youtube.com/watch?v=56FW_N1-NS4) <<< Click Here
 
-## [App deployed on a droplet](http://143.244.160.163:5329) <<< Click Here
-
 <hr>
 
 ### Walkthrough
